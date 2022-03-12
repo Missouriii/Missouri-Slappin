@@ -6,7 +6,7 @@ author: FaizDev
 
 commands:
   fist:
-    description: §cF§1i§as§et§r §6Commands
+    description: Fist Commands
 
 permissions:
   fist.command.admin:
