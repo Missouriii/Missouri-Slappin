@@ -263,7 +263,7 @@ class FistGame
 					$damager->getCraftingGrid()->clearAll();
 					$damager->removeAllEffects();
 					
-					$damager->getInventory()->setItem(0, Item::get(Item::IRON_SWORD, 0, 1));
+					$damager->getInventory()->setItem(0, Item::get(Item::COOKED_BEEF, 0, 64));
 				}
 			break;
 			
@@ -292,7 +292,7 @@ class FistGame
 		$player->getCraftingGrid()->clearAll();
 		$player->removeAllEffects();
 		
-		$player->getInventory()->setItem(0, Item::get(Item::IRON_SWORD, 0, 1));
+		$player->getInventory()->setItem(0, Item::get(Item::COOKED_BEEF, 0, 64));
 		
 		$respawn = $this->getRespawn();
 		$x = $respawn["PX"];
