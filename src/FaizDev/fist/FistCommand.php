@@ -1,6 +1,6 @@
 <?php
 
-namespace Laith98Dev\FFA;
+namespace FaizDev\fist;
 
 use pocketmine\command\CommandSender;
 use pocketmine\command\PluginCommand;
