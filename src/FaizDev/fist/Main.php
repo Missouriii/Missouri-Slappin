@@ -57,7 +57,7 @@ class Main extends PluginBase implements Listener
 	public function initConfig(){
 		if(!is_file($this->getDataFolder() . "config.yml")){
 			(new Config($this->getDataFolder() . "config.yml", Config::YAML, [
-				"scoreboardIp" => "play.example.net",
+				"scoreboardIp" => "§eplay.example.net",
 				"banned-commands" => ["/kill"],
 				"death-respawn-inMap" => true,
 				"join-and-respawn-protected" => true,
@@ -79,7 +79,7 @@ class Main extends PluginBase implements Listener
 					rename($this->getDataFolder() . "config.yml", $this->getDataFolder() . "config_old.yml");
 					
 					(new Config($this->getDataFolder() . "config.yml", Config::YAML, [
-						"scoreboardIp" => "play.example.net",
+						"scoreboardIp" => "§eplay.example.net",
 						"banned-commands" => ["/kill"],
 						"death-respawn-inMap" => true,
 						"join-and-respawn-protected" => true,
