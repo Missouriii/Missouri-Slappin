@@ -45,10 +45,10 @@ class Main extends PluginBase implements Listener
 		
 		$map = $this->getServer()->getCommandMap();
 		
-		$ffac = new FistCommand("fist", "FIST Commands", "fist.command.admin", ["fist"]);
-		$ffac->init($this);
+		$fist = new FistCommand("fist", "FIST Commands", "fist.command.admin", ["fist"]);
+		$fist->init($this);
 		
-		$map->register($this->getName(), $ffac);
+		$map->register($this->getName(), $fist);
 		
 		// $this->reloadCheck();// TODO: quit all player when server reload^^/ i don't need it now because reload command has been removed.
 		$this->loadArenas();
@@ -136,7 +136,7 @@ class Main extends PluginBase implements Listener
 		$arenas->set($name, $data);
 		$arenas->save();
 		
-		$this->arenas[$name] = new FFAGame($this, $data);
+		$this->arenas[$name] = new FistGame($this, $data);
 		return true;
 	}
 	
