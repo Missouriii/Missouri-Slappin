@@ -1,5 +1,5 @@
 name: Fist
-api: ["4.0.0"]
+api: 4.0.0
 version: 1.0.1
 main: FaizDev\fist\Main
 author: FaizDev
