@@ -2,19 +2,24 @@
 
 namespace FaizDev\fist;
 
-use pocketmine\level\Location;
+use pocketmine\entity\Location;
 
 use pocketmine\item\Item;
+use pocketmine\item\ItemFactory;
+use pocketmine\item\ItemIds;
+use pocketmine\item\VanillaItems;
 
-use pocketmine\Player;
+use pocketmine\player\Player;
+use pocketmine\player\GameMode;
 
 use pocketmine\math\Vector3;
 
-use pocketmine\level\Position;
+use pocketmine\world\Position;
 
 use pocketmine\utils\{Config, TextFormat as TF};
 
 use pocketmine\event\entity\EntityDamageEvent;
+use pocketmine\event\entity\EntityDamageByEntityEvent;
 
 use pocketmine\network\mcpe\protocol\RemoveObjectivePacket;
 use pocketmine\network\mcpe\protocol\SetDisplayObjectivePacket;
@@ -103,28 +108,28 @@ class FistGame
 		$pk->displayName = $displayName;
 		$pk->criteriaName = "dummy";
 		$pk->sortOrder = 0;
-		$player->sendDataPacket($pk);
+		$player->getNetworkSession()->sendDataPacket($pk);
 		$this->scoreboards[$player->getName()] = $objectiveName;
 	}
 
 	public function remove(Player $player): void{
-		$objectiveName = $this->getObjectiveName($player) ?? "fist";
+		$objectiveName = $this->getObjectiveName($player) ?? "ffa";
 		$pk = new RemoveObjectivePacket();
 		$pk->objectiveName = $objectiveName;
-		$player->sendDataPacket($pk);
+		$player->getNetworkSession()->sendDataPacket($pk);
 		unset($this->scoreboards[$player->getName()]);
 	}
 
 	public function setLine(Player $player, int $score, string $message): void{
 		if(!isset($this->scoreboards[$player->getName()])){
-			$this->getLogger()->error("Cannot set a score to a player with no scoreboard");
+			$this->plugin->getLogger()->error("Cannot set a score to a player with no scoreboard");
 			return;
 		}
 		if($score > 15 || $score < 1){
-			$this->getLogger()->error("Score must be between the value of 1-15. $score out of range");
+			$this->plugin->getLogger()->error("Score must be between the value of 1-15. $score out of range");
 			return;
 		}
-		$objectiveName = $this->getObjectiveName($player) ?? "fist";
+		$objectiveName = $this->getObjectiveName($player) ?? "ffa";
 		$entry = new ScorePacketEntry();
 		$entry->objectiveName = $objectiveName;
 		$entry->type = $entry::TYPE_FAKE_PLAYER;
@@ -134,7 +139,7 @@ class FistGame
 		$pk = new SetScorePacket();
 		$pk->type = $pk::TYPE_CHANGE;
 		$pk->entries[] = $entry;
-		$player->sendDataPacket($pk);
+		$player->getNetworkSession()->sendDataPacket($pk);
 	}
 
 	public function getObjectiveName(Player $player): ?string{
@@ -143,10 +148,10 @@ class FistGame
 	
 	public function getLevel(?string $name = null){
 		if($name == null){
-			$this->plugin->getServer()->loadLevel($this->getWorld());
-			return $this->plugin->getServer()->getLevelByName($this->getWorld());
+			$this->plugin->getServer()->getWorldManager()->loadWorld($this->getWorld());
+			return $this->plugin->getServer()->getWorldManager()->getWorldByName($this->getWorld());
 		}
-		return $this->plugin->getServer()->getLevelByName($name);
+		return $this->plugin->getServer()->getWorldManager()->getWorldByName($name);
 	}
 	
 	public function broadcast(string $message){
@@ -164,35 +169,36 @@ class FistGame
 		
 		if(!is_array($lobby) || count($lobby) == 0){
 			if($player->hasPermission("fist.command.admin"))
-				$player->sendMessage(TF::RED . "Please set game lobby, Usage: /fist setlobby");
+				$player->sendMessage(TF::RED . "Please set lobby position, Usage: /fist setlobby");
 			return false;
 		}
 		
 		if(!is_array($this->getRespawn()) || count($this->getRespawn()) == 0){
 			if($player->hasPermission("fist.command.admin"))
-				$player->sendMessage(TF::RED . "Please set game lobby, Usage: /fist setrespawn");
+				$player->sendMessage(TF::RED . "Please set respawn position, Usage: /fist setrespawn");
 			return false;
 		}
 		
-		$x = $lobby["PX"];
-		$y = $lobby["PY"];
-		$z = $lobby["PZ"];
-		$yaw = $lobby["YAW"];
-		$pitch = $lobby["PITCH"];
+		$x = floatval($lobby["PX"]);
+		$y = floatval($lobby["PY"]);
+		$z = floatval($lobby["PZ"]);
+		$yaw = floatval($lobby["YAW"]);
+		$pitch = floatval($lobby["PITCH"]);
 		
 		$player->teleport(new Position($x, $y, $z, $this->getLevel()), $yaw, $pitch);
 		
-		$player->setGamemode(2);
+		$player->setGamemode(GameMode::ADVENTURE());
 		$player->setHealth(20);
-		$player->setFood(20);
+		$player->getHungerManager()->setFood(20);
 		
 		$player->getInventory()->clearAll();
 		$player->getArmorInventory()->clearAll();
 		$player->getCraftingGrid()->clearAll();
-		$player->removeAllEffects();
+		$player->getEffects()->clear();
+		//$player->removeAllEffects();
 		
-		$player->getInventory()->setItem(0, Item::get(Item::COOKED_BEEF, 0, 64));
-
+		$player->getInventory()->setItem(0, ItemFactory::getInstance()->get(ItemIds::COOKED_BEEF, 0, 64));
+		
 		$this->players[$player->getName()] = $player;
 		
 		$cfg = new Config($this->plugin->getDataFolder() . "config.yml", Config::YAML);
@@ -214,14 +220,15 @@ class FistGame
 		
 		$this->remove($player);
 		
-		$player->teleport($this->plugin->getServer()->getDefaultLevel()->getSafeSpawn());
+		$player->teleport($this->plugin->getServer()->getWorldManager()->getDefaultWorld()->getSafeSpawn());
 		$player->getInventory()->clearAll();
 		$player->getArmorInventory()->clearAll();
 		$player->getCraftingGrid()->clearAll();
-		$player->removeAllEffects();
-		$player->setGamemode($this->plugin->getServer()->getDefaultGamemode());
+		$player->getEffects()->clear();
+		$player->setGamemode($this->plugin->getServer()->getGamemode());
+		//$player->setGamemode(GameMode::SURVIVAL());
 		$player->setHealth(20);
-		$player->setFood(20);
+		$player->getHungerManager()->setFood(20);
 		
 		$this->broadcast($player->getName() . " quit Fist!");
 		return true;
@@ -240,30 +247,30 @@ class FistGame
 		$player->getInventory()->clearAll();
 		$player->getArmorInventory()->clearAll();
 		$player->getCraftingGrid()->clearAll();
-		$player->removeAllEffects();
+		$player->getEffects()->clear();
 		
-		$player->setGamemode(2);
+		$player->setGamemode(GameMode::ADVENTURE());
 		$player->setHealth(20);
-		$player->setFood(20);
+		$player->getHungerManager()->setFood(20);
 		$this->plugin->addDeath($player);
 		$cfg = new Config($this->plugin->getDataFolder() . "config.yml", Config::YAML);
 		switch ($event->getCause()){
 			case EntityDamageEvent::CAUSE_ENTITY_ATTACK:
-				$damager = $event->getDamager();
-				if($damager !== null){
+				$damager = $event instanceof EntityDamageByEntityEvent ? $event->getDamager() : null;
+				if($damager !== null && $damager instanceof Player){
 					$message = str_replace(["{PLAYER}", "{KILLER}", "&"], [$player->getName(), $damager->getName(), TF::ESCAPE], $cfg->get("death-attack-message"));
 					$this->plugin->addKill($damager);
 					
 					$damager->sendPopup(TF::YELLOW . "+1 Kill");
 					$damager->setHealth(20);
-					$damager->setFood(20);
+					$damager->getHungerManager()->setFood(20);
 					
 					$damager->getInventory()->clearAll();
 					$damager->getArmorInventory()->clearAll();
 					$damager->getCraftingGrid()->clearAll();
-					$damager->removeAllEffects();
+					$damager->getEffects()->clear();
 					
-					$damager->getInventory()->setItem(0, Item::get(Item::COOKED_BEEF, 0, 64));
+					$damager->getInventory()->setItem(0, ItemFactory::getInstance()->get(ItemIds::COOKED_BEEF, 0, 64));
 				}
 			break;
 			
@@ -283,23 +290,23 @@ class FistGame
 	}
 	
 	public function respawn(Player $player){
-		$player->setGamemode(2);
+		$player->setGamemode(GameMode::ADVENTURE());
 		$player->setHealth(20);
-		$player->setFood(20);
+		$player->getHungerManager()->setFood(20);
 		
 		$player->getInventory()->clearAll();
 		$player->getArmorInventory()->clearAll();
 		$player->getCraftingGrid()->clearAll();
-		$player->removeAllEffects();
+		$player->getEffects()->clear();
 		
-		$player->getInventory()->setItem(0, Item::get(Item::COOKED_BEEF, 0, 64));
+		$player->getInventory()->setItem(0, ItemFactory::getInstance()->get(ItemIds::COOKED_BEEF, 0, 64));
 		
 		$respawn = $this->getRespawn();
-		$x = $respawn["PX"];
-		$y = $respawn["PY"];
-		$z = $respawn["PZ"];
-		$yaw = $respawn["YAW"];
-		$pitch = $respawn["PITCH"];
+		$x = floatval($respawn["PX"]);
+		$y = floatval($respawn["PY"]);
+		$z = floatval($respawn["PZ"]);
+		$yaw = floatval($respawn["YAW"]);
+		$pitch = floatval($respawn["PITCH"]);
 		
 		$player->teleport(new Position($x, $y, $z, $this->getLevel()), $yaw, $pitch);
 		
@@ -313,11 +320,11 @@ class FistGame
 	public function tick(){
 		foreach ($this->getPlayers() as $player){
 			$cfg = new Config($this->plugin->getDataFolder() . "config.yml", Config::YAML);
-			$this->new($player, "fist", $this->scoreboardsLines[$this->scoreboardsLine]);
+			$this->new($player, "ffa", $this->scoreboardsLines[$this->scoreboardsLine]);
 			$this->setLine($player, 1, " ");
 			$this->setLine($player, 2, " Players: " . TF::YELLOW . count($this->getPlayers()) . "  ");
 			$this->setLine($player, 3, "  ");
-			$this->setLine($player, 4, " Map: " . TF::YELLOW . $this->getWorld() . "  ");
+			$this->setLine($player, 4, " Map: " . TF::YELLOW . $this->getName() . "  ");
 			$this->setLine($player, 5, "   ");
 			$this->setLine($player, 6, " Kills: " . TF::YELLOW . $this->plugin->getKills($player) . " ");
 			$this->setLine($player, 7, " Deaths: " . TF::YELLOW . $this->plugin->getDeaths($player) . " ");
