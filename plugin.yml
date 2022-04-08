@@ -1,13 +1,13 @@
 name: Fist
-api: 3.0.0
-version: 1.0.0
+api: ["4.0.0"]
+version: 1.0.1
 main: FaizDev\fist\Main
 author: FaizDev
 
-commands:
-  fist:
-    description: Fist Commands
-
 permissions:
   fist.command.admin:
-    description: Permission to allow use all fist commands
+    default: op 
+  fist.command.join:
+    default: true
+  fist.command.quit:
+    default: true
