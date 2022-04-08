@@ -113,7 +113,7 @@ class FistGame
 	}
 
 	public function remove(Player $player): void{
-		$objectiveName = $this->getObjectiveName($player) ?? "ffa";
+		$objectiveName = $this->getObjectiveName($player) ?? "fist";
 		$pk = new RemoveObjectivePacket();
 		$pk->objectiveName = $objectiveName;
 		$player->getNetworkSession()->sendDataPacket($pk);
