@@ -129,7 +129,7 @@ class FistGame
 			$this->plugin->getLogger()->error("Score must be between the value of 1-15. $score out of range");
 			return;
 		}
-		$objectiveName = $this->getObjectiveName($player) ?? "ffa";
+		$objectiveName = $this->getObjectiveName($player) ?? "fist";
 		$entry = new ScorePacketEntry();
 		$entry->objectiveName = $objectiveName;
 		$entry->type = $entry::TYPE_FAKE_PLAYER;
