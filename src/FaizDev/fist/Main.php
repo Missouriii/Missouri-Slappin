@@ -115,7 +115,7 @@ class Main extends PluginBase implements Listener
 				$level->setTime(1000);
 				$level->stopTime();
 			}
-			$this->arenas[$data["name"]] = new FFAGame($this, $data);
+			$this->arenas[$data["name"]] = new FistGame($this, $data);
 		}
 	}
 	
