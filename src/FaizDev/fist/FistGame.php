@@ -320,7 +320,7 @@ class FistGame
 	public function tick(){
 		foreach ($this->getPlayers() as $player){
 			$cfg = new Config($this->plugin->getDataFolder() . "config.yml", Config::YAML);
-			$this->new($player, "ffa", $this->scoreboardsLines[$this->scoreboardsLine]);
+			$this->new($player, "fist", $this->scoreboardsLines[$this->scoreboardsLine]);
 			$this->setLine($player, 1, " ");
 			$this->setLine($player, 2, " Players: " . TF::YELLOW . count($this->getPlayers()) . "  ");
 			$this->setLine($player, 3, "  ");
