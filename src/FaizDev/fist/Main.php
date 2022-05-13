@@ -36,12 +36,12 @@ class Main extends PluginBase implements Listener
 	public $arenas = [];
 	
 	public function onEnable(): void{
-		@mkdir($this->getDataFolder());
-		
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
 		$this->getScheduler()->scheduleRepeatingTask(new ArenasTask($this), 20);
 		
 		$this->initConfig();// create the config and check data.
+		
+		$this->saveDefaultConfig();
 		
 		$map = $this->getServer()->getCommandMap();
 		
