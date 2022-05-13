@@ -3,7 +3,7 @@ build-by-default: true
 branches:
 - main
 projects: 
-  Fist:
+  Missouri-Slappin:
     path: ""
     icon: icon.png
 ...
