@@ -44,11 +44,11 @@ class FistGame
 	private $scoreboardsLine = 0;
 	
 	private $scoreboardsLines = [
-		0 => TF::BOLD . TF::YELLOW . "FIST",
-		1 => TF::BOLD . TF::WHITE . "FI" . TF::YELLOW . "ST",
-		2 => TF::BOLD . TF::YELLOW . "F" . TF::WHITE . "I" . TF::YELLOW . "S" . TF::WHITE . "T",
-		3 => TF::BOLD . TF::YELLOW . "FI" . TF::WHITE . "ST",
-		4 => TF::BOLD . TF::WHITE . "FIST"
+		0 => TF::BOLD . TF::DARK_AQUA . "Fist",
+		1 => TF::BOLD . TF::AQUA . "Fi" . TF::DARK_AQUA . "st",
+		2 => TF::BOLD . TF::DARK_AQUA . "F" . TF::AQUA . "i" . TF::DARK_AQUA . "s" . TF::AQUA . "t",
+		3 => TF::BOLD . TF::DARK_AQUA . "F" . TF::AQUA . "st",
+		4 => TF::BOLD . TF::AQUA . "Fist"
 	];
 	
 	public $protect = [];
