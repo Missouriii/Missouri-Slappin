@@ -33,13 +33,13 @@ class FistCommand extends Command implements PluginOwned
 		}
 		
 		if(!isset($args[0])){
-			$sender->sendMessage(TF::RED . "Usage: /" . $cmdLabel . " help");
+			$sender->sendMessage(TF::RED . "§l§2»§r§c Usage: /" . $cmdLabel . " help");
 			return false;
 		}
 		
 		switch ($args[0]){
 			case "help":
-				$sender->sendMessage(TF::YELLOW . "========================");
+				$sender->sendMessage(TF::YELLOW . "§l§e========================");
 				//if($this->testPermission($sender)){
 				if($sender->hasPermission("fist.command.admin")){
 					$sender->sendMessage(TF::GREEN  . "- /" . $cmdLabel . " help");
@@ -51,14 +51,14 @@ class FistCommand extends Command implements PluginOwned
 				}
 				$sender->sendMessage(TF::GREEN  . "- /" . $cmdLabel . " join");
 				$sender->sendMessage(TF::GREEN  . "- /" . $cmdLabel . " quit");
-				$sender->sendMessage(TF::YELLOW . "========================");
+				$sender->sendMessage(TF::YELLOW . "§l§e========================");
 			break;
 			
 			case "create":
 				if(!$sender->hasPermission("fist.command.admin"))
 					return false;
 				if(!isset($args[1])){
-					$sender->sendMessage(TF::RED . "Usage: /" . $cmdLabel . " create <arenaName>");
+					$sender->sendMessage(TF::RED . "§l§2»§r§c Usage: /" . $cmdLabel . " create <arenaName>");
 					return false;
 				}
 				
@@ -66,20 +66,20 @@ class FistCommand extends Command implements PluginOwned
 				$level = $sender->getWorld();
 				
 				if($level->getFolderName() == $this->plugin->getServer()->getWorldManager()->getDefaultWorld()->getFolderName()){
-					$sender->sendMessage(TF::RED . "You cannot create game in default level!");
+					$sender->sendMessage(TF::RED . "§l§2»§r§c You cannot create a game in Hub!");
 					return false;
 				}
 				
 				$arenas = new Config($this->plugin->getDataFolder() . "arenas.yml", Config::YAML);
 				
 				if($arenas->get($arenaName)){
-					$sender->sendMessage(TF::RED . "Arena already exist!");
+					$sender->sendMessage(TF::RED . "§l§2»§r§c Arena already exists!");
 					return false;
 				}
 				
 				$data = ["name" => $arenaName, "world" => $level->getFolderName(), "lobby" => [], "respawn" => []];
 				if($this->plugin->addArena($data)){
-					$sender->sendMessage(TF::YELLOW . "Arena created!");
+					$sender->sendMessage(TF::YELLOW . "§l§2»§r§a Arena created!");
 					return true;
 				}
 			break;
@@ -89,19 +89,19 @@ class FistCommand extends Command implements PluginOwned
 					return false;
 				
 				if(!isset($args[1])){
-					$sender->sendMessage(TF::RED . "Usage: /" . $cmdLabel . " remove <arenaName>");
+					$sender->sendMessage(TF::RED . "§l§2»§r§c Usage: /" . $cmdLabel . " remove <arenaName>");
 					return false;
 				}
 				
 				$arenaName = $args[1];
 				
 				if(!isset($this->plugin->arenas[$arenaName])){
-					$sender->sendMessage(TF::RED . "Arena not exist");
+					$sender->sendMessage(TF::RED . "§l§2»§r§c Arena does not exist");
 					return false;
 				}
 				
 				if($this->plugin->removeArena($arenaName)){
-					$sender->sendMessage(TF::GREEN . "Arena deleted!");
+					$sender->sendMessage(TF::GREEN . "§l§2»§r§a Arena deleted!");
 					return true;
 				}
 			break;
@@ -122,7 +122,7 @@ class FistCommand extends Command implements PluginOwned
 				}
 				
 				if($arenaName == null){
-					$sender->sendMessage(TF::RED . "Arena not exist, try create Usage: /" . $cmdLabel . " create" . "!");
+					$sender->sendMessage(TF::RED . "§l§2»§r§c Arena does not exist, please try:§e Usage: /" . $cmdLabel . " create" . "!");
 					return false;
 				}
 				
@@ -133,7 +133,7 @@ class FistCommand extends Command implements PluginOwned
 				$arenas->save();
 				if($arena !== null)
 					$arena->UpdateData($data);
-				$sender->sendMessage(TF::YELLOW . "Lobby has been set!");
+				$sender->sendMessage(TF::YELLOW . "§l§2»§r§a Lobby has been set!");
 			break;
 			
 			case "setrespawn":
@@ -152,7 +152,7 @@ class FistCommand extends Command implements PluginOwned
 				}
 				
 				if($arenaName == null){
-					$sender->sendMessage(TF::RED . "Arena not exist, try create Usage: /" . $cmdLabel . " create" . "!");
+					$sender->sendMessage(TF::RED . "§l§2»§r§c Arenadoes not exist, please try using:§e Usage: /" . $cmdLabel . " create" . "!");
 					return false;
 				}
 				
@@ -163,16 +163,16 @@ class FistCommand extends Command implements PluginOwned
 				$arenas->save();
 				if($arena !== null)
 					$arena->UpdateData($data);
-				$sender->sendMessage(TF::YELLOW . "Respawn has been set!");
+				$sender->sendMessage(TF::YELLOW . "§l§2»§r§a Respawn has been set!");
 			break;
 			
 			case "list":
 				if(!$sender->hasPermission("fist.command.admin"))
 					return false;
 				
-				$sender->sendMessage(TF::GREEN . "Arenas:");
+				$sender->sendMessage(TF::GREEN . "§l§2ARENAS:");
 				foreach ($this->plugin->getArenas() as $arena){
-					$sender->sendMessage(TF::YELLOW . "- " . $arena->getName() . " => Players: " . count($arena->getPlayers()));
+					$sender->sendMessage(TF::YELLOW . "- " . $arena->getName() . " Players: " . count($arena->getPlayers()));
 				}
 			break;
 			
@@ -206,7 +206,7 @@ class FistCommand extends Command implements PluginOwned
 						return true;
 					}
 				} else {
-					$sender->sendMessage("You're not in a arena!");
+					$sender->sendMessage("§l§2»§r§c You're not currently in an arena!");
 					return false;
 				}
 			break;
