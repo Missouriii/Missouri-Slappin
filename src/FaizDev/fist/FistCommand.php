@@ -28,7 +28,7 @@ class FistCommand extends Command implements PluginOwned
 	
 	public function execute(CommandSender $sender, string $cmdLabel, array $args): bool{
 		if(!($sender instanceof Player)){
-			$sender->sendMessage("run command in-game only");
+			$sender->sendMessage("§l§2»§r§c Please run this command in-game");
 			return false;
 		}
 		
