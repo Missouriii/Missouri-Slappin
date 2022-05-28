@@ -169,13 +169,13 @@ class FistGame
 		
 		if(!is_array($lobby) || count($lobby) == 0){
 			if($player->hasPermission("fist.command.admin"))
-				$player->sendMessage(TF::RED . "Please set lobby position, Usage: /fist setlobby");
+				$player->sendMessage(TF::RED . "§l§2»§r§c Please set lobby position. §eUsage: /fist setlobby");
 			return false;
 		}
 		
 		if(!is_array($this->getRespawn()) || count($this->getRespawn()) == 0){
 			if($player->hasPermission("fist.command.admin"))
-				$player->sendMessage(TF::RED . "Please set respawn position, Usage: /fist setrespawn");
+				$player->sendMessage(TF::RED . "§l§2»§r§c Please set respawn position.§e Usage: /fist setrespawn");
 			return false;
 		}
 		
@@ -204,10 +204,10 @@ class FistGame
 		$cfg = new Config($this->plugin->getDataFolder() . "config.yml", Config::YAML);
 		if($cfg->get("join-and-respawn-protected") === true){
 			$this->protect[$player->getName()] = 3;
-			$player->sendMessage("You're now protected 3 seconds");
+			$player->sendMessage("§l§2»§r§e You're now protected for 3 seconds");
 		}
 		
-		$this->broadcast($player->getName() . " joined to Fist!");
+		$this->broadcast($player->getName() . "§ajoined §3Fist§g!");
 		return true;
 	}
 	
@@ -230,7 +230,7 @@ class FistGame
 		$player->setHealth(20);
 		$player->getHungerManager()->setFood(20);
 		
-		$this->broadcast($player->getName() . " quit Fist!");
+		$this->broadcast($player->getName() . " §cleft §3Fist§g!");
 		return true;
 	}
 	
@@ -313,7 +313,7 @@ class FistGame
 		$cfg = new Config($this->plugin->getDataFolder() . "config.yml", Config::YAML);
 		if($cfg->get("join-and-respawn-protected") === true){
 			$this->protect[$player->getName()] = 3;
-			$player->sendMessage("You're now protected 3 seconds");
+			$player->sendMessage("§l§2»§r§e You're now protected for 3 seconds");
 		}
 	}
 	
@@ -322,14 +322,14 @@ class FistGame
 			$cfg = new Config($this->plugin->getDataFolder() . "config.yml", Config::YAML);
 			$this->new($player, "fist", $this->scoreboardsLines[$this->scoreboardsLine]);
 			$this->setLine($player, 1, " ");
-			$this->setLine($player, 2, " Players: " . TF::YELLOW . count($this->getPlayers()) . "  ");
+			$this->setLine($player, 2, "§e Players: " . TF::WHITE . count($this->getPlayers()) . "  ");
 			$this->setLine($player, 3, "  ");
-			$this->setLine($player, 4, " Map: " . TF::YELLOW . $this->getName() . "  ");
+			$this->setLine($player, 4, " §eMap: " . TF::WHITE . $this->getName() . "  ");
 			$this->setLine($player, 5, "   ");
-			$this->setLine($player, 6, " Kills: " . TF::YELLOW . $this->plugin->getKills($player) . " ");
-			$this->setLine($player, 7, " Deaths: " . TF::YELLOW . $this->plugin->getDeaths($player) . " ");
+			$this->setLine($player, 6, " §dKills: " . TF::WHITE . $this->plugin->getKills($player) . " ");
+			$this->setLine($player, 7, " §dDeaths: " . TF::WHITE . $this->plugin->getDeaths($player) . " ");
 			$this->setLine($player, 8, "    ");
-			$this->setLine($player, 9, " " . $cfg->get("scoreboardIp", "§eplay.example.net") . " ");
+			$this->setLine($player, 9, " " . $cfg->get("scoreboardIp", "§dplayblossom.net") . " ");
 		}
 		
 		if($this->scoreboardsLine == (count($this->scoreboardsLines) - 1)){
