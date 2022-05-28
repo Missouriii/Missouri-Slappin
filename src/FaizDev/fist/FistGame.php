@@ -44,11 +44,11 @@ class FistGame
 	private $scoreboardsLine = 0;
 	
 	private $scoreboardsLines = [
-		0 => TF::BOLD . TF::DARK_AQUA . "Fist",
-		1 => TF::BOLD . TF::AQUA . "Fi" . TF::DARK_AQUA . "st",
-		2 => TF::BOLD . TF::DARK_AQUA . "F" . TF::AQUA . "i" . TF::DARK_AQUA . "s" . TF::AQUA . "t",
-		3 => TF::BOLD . TF::DARK_AQUA . "F" . TF::AQUA . "st",
-		4 => TF::BOLD . TF::AQUA . "Fist"
+		0 => TF::BOLD . TF::DARK_AQUA . "FIST",
+		1 => TF::BOLD . TF::AQUA . "FI" . TF::DARK_AQUA . "ST",
+		2 => TF::BOLD . TF::DARK_AQUA . "F" . TF::AQUA . "I" . TF::DARK_AQUA . "S" . TF::AQUA . "T",
+		3 => TF::BOLD . TF::DARK_AQUA . "FI" . TF::AQUA . "ST",
+		4 => TF::BOLD . TF::AQUA . "FIST"
 	];
 	
 	public $protect = [];
@@ -207,7 +207,7 @@ class FistGame
 			$player->sendMessage("§l§2»§r§e You're now protected for 3 seconds");
 		}
 		
-		$this->broadcast($player->getName() . "§ajoined §3Fist§g!");
+		$this->broadcast("§l§2»§r§a " . $player->getName() . "§ajoined §3Fist§g!");
 		return true;
 	}
 	
@@ -230,7 +230,7 @@ class FistGame
 		$player->setHealth(20);
 		$player->getHungerManager()->setFood(20);
 		
-		$this->broadcast($player->getName() . " §cleft §3Fist§g!");
+		$this->broadcast("§l§2»§r§c " . $player->getName() . " §cleft §3Fist§g!");
 		return true;
 	}
 	
