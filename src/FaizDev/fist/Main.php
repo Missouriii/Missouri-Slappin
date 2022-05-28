@@ -106,7 +106,7 @@ class Main extends PluginBase implements Listener
 		foreach ($arenas->getAll() as $arena => $data){
 			if(!isset($data["name"]) || !isset($data["world"]) || !isset($data["lobby"]) || !isset($data["respawn"])){
 				if(isset($data["name"]))
-					$this->getLogger()->error("Error in load arena " . $data["name"] . " because corrupt data!");
+					$this->getLogger()->error("§l§2»§r§c There was an error in loading arena:§e " . $data["name"] . " §cbecause of corrupt data!");
 				continue;
 			}
 			
@@ -174,7 +174,7 @@ class Main extends PluginBase implements Listener
 		}
 		
 		if($this->getPlayerArena($player) !== null){
-			$player->sendMessage(TF::RED . "You're already in arena!");
+			$player->sendMessage(TF::RED . "§l§2»§r§c You're already in an arena!");
 			return false;
 		}
 		
@@ -186,12 +186,12 @@ class Main extends PluginBase implements Listener
 	
 	public function joinRandomArena(Player $player): bool{
 		if($this->getPlayerArena($player) !== null){
-			$player->sendMessage(TF::RED . "You're already in arena!");
+			$player->sendMessage(TF::RED . "§l§2»§r§c You're already in an arena!");
 			return false;
 		}
 		
 		if(count($this->getArenas()) == 0){
-			$player->sendMessage(TF::RED . "No arenas found!");
+			$player->sendMessage(TF::RED . "§l§2»§r§c No arenas were found!");
 			return false;
 		}
 		
@@ -329,7 +329,7 @@ class Main extends PluginBase implements Listener
 			$banned = $cfg->get("banned-commands", []);
 			$banned = array_map("strtolower", $banned);
 			if(($arena = $this->getPlayerArena($player)) !== null && in_array(strtolower(explode(" ", $command, 2)[0]), $banned)) {
-				$player->sendMessage(TF::RED . "you cannot use this command here!");
+				$player->sendMessage(TF::RED . "§l§2»§r§c You cannot use this command here!");
 				$event->cancel();
 			}
 		}
