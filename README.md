@@ -1,4 +1,4 @@
-# FIST
+# Mssouri SLapping
 - (Fist) is a survival and fighting game where the game begins and you have to fight to survive.
 
 
